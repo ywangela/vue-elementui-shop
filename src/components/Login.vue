@@ -79,7 +79,7 @@ export default {
           // 返回的结果，即result是一个promise
          const result = await this.$http.post("login",this.loginForm);
          const data= result.data
-         console.log(data.meta.status);
+        //  console.log(data.meta.status);
          if(data.meta.status !== 200) {
             //  console.log(this.$message);
             this.$message.error('登录失败！')

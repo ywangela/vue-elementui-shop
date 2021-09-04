@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 // 路由懒加载
 const Login = () => import('@/components/Login')
 const Home = () => import('@/components/Home')
+const Welcome = () => import('@/components/Welcome')
 
 Vue.use(VueRouter)
 
@@ -21,7 +22,18 @@ const routes = [
 
  {
   path:'/home',
-  component:Home
+  component:Home,        // 因为home页有很多路由（对应的组件）所以需要重定向到一个具体的
+  // redirect: '/welcome', //只要你访问了home页，就自动重定向到/welcome
+  children:[
+    {
+      path:'',
+      redirect: '/welcome'
+    },
+    {
+      path:'/welcome',
+      component:Welcome
+    }
+  ]
 }
 ]
 
