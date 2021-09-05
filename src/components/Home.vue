@@ -26,13 +26,15 @@
       :unique-opened="true" 
       :collapse="isCollapse"
       :collapse-transition="false"
-      :router="true">
+      :router="true"
+      :default-active="activePath">
       <!-- 一级菜单区域 -->
       <!-- ElementUI模板中的index是字符串类型，所以我们需要将其item.id数值
       转换为字符串类型；
       并且，index值如果是相同的，则点击第一个菜单栏，剩下的其他菜单全部跟着展开
       ，效果不好，所以index需要动态绑定，且index值要是不同的 -->
-      <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
+      <el-submenu :index="item.id+''" v-for="item in menuList" 
+      :key="item.id"  :childMenuItem="item">
           <!-- 一级菜单的模板区域 -->
         <template slot="title">
             <!-- 1）图标 -->
@@ -42,8 +44,8 @@
         </template>
 
           <!-- 二级菜单 -->
-          <el-menu-item :index="'/' + subItem.path+ ''" v-for="subItem in item.children" 
-          :key="subItem.id">
+          <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" 
+          :key="subItem.id" @click="saveNavState('/' + subItem.path)">
             <template slot="title">
               <!-- 1）图标 -->
               <i class="el-icon-menu"></i>
@@ -85,12 +87,16 @@ export default {
 
         },
         // 左侧菜单栏是否折叠
-        isCollapse:false
+        isCollapse:false,
+        // 保存被激活的链接地址
+         activePath:''
       }
+     
     },
     // 在该组件创建的时候，就去调数据
     created () {
         this.getMenuList()
+        this.activePath = sessionStorage.getItem('activePath')
     },
     methods: {
         // 头部的退出按钮
@@ -109,12 +115,17 @@ export default {
             // 如果获取数据没有成功的话，跳出错误型弹框
            if(res.status !== 200)  this.$message.error(res.data.meta.msg)
            this.menuList = res.data.data
-           console.log(this.menuList)
+          //  console.log(this.menuList)
         },
 
         // 实现左侧菜单的折叠与展开
         toggleCollapse(){
              this.isCollapse = !this.isCollapse
+        },
+        // 保持链接的激活状态
+        saveNavState(activePath){
+           sessionStorage.setItem('activePath',activePath)
+           this.activePath = activePath
         }
     }
     
