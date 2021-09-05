@@ -1,14 +1,13 @@
 /* 全局样式设置 */
 html,body,#app {
-    width: 100%;
+    min-width: 1366px; /* 防止有些内容位置错乱*/
     height: 100%;
+
+    margin: 0;
+    padding: 0;
     
 }
 
-* {
-    margin: 0;
-    padding: 0;
-}
 
 /*  首页 面包屑导航 */
 .el-breadcrumb {
