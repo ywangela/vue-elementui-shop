@@ -4,6 +4,10 @@ import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
+// 树状表格中用到的插件
+import TreeTable from 'vue-table-with-tree-grid'
+
+
 // 导入全局样式表
 import '@/assets/css/global.css'
 // 导入字体图标
@@ -35,6 +39,8 @@ Vue.config.productionTip = false
 // element-ul
 Vue.use(ElementUI)
 
+// 树状表格插件注册
+Vue.component('tree-table',TreeTable)
 
 new Vue({
   router,
