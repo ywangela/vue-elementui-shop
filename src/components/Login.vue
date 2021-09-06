@@ -97,7 +97,15 @@ export default {
 
         })
       }
+    },
+
+    created () {
+      console.log('login created')
+    },
+    destroyed(){
+      console.log('login destroyed')
     }
+
 }
 </script>
 

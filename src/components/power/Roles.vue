@@ -83,11 +83,12 @@
                  show-checkbox
                  node-key="id" 
                  default-expand-all 
-                 :default-checked-keys="defkeys">
+                 :default-checked-keys="defkeys"
+                  ref="treeRef">
         </el-tree>
         <span slot="footer" class="dialog-footer">
             <el-button @click="setRightDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="setRightDialogVisible = false">确 定</el-button>
+            <el-button type="primary" @click="allotRights">确 定</el-button>
         </span>
    </el-dialog>
 
@@ -111,7 +112,9 @@ export default {
                 label:'authName'
             },
             // 树形控件中 默认选中的节点id值数组
-            defkeys:[]
+            defkeys:[],
+            // 当前即将分配权限的角色id
+            roleId:''
         }
     },
     created () {
@@ -151,9 +154,10 @@ export default {
       },
     //   显示分配权限对话框
      async showSetRightDialog(role){
+         this.roleId = role.id
         // 获取所有权限的数据
         const {data:res} = await this.$http.get('rights/tree')
-        console.log(res)
+        // console.log(res)
         if(res.meta.status !== 200) this.$message.error('获取权限数据失败！')
 
         // 把获取到的权限数据保存到data中的rightsList中
@@ -180,6 +184,25 @@ export default {
     //   监听分配权限对话框中的关闭事件
     setRightDialogClosed(){
         this.defkeys = []
+    },
+    // 为角色分配权限
+    async allotRights(){
+        const keys = [
+            ...this.$refs.treeRef.
+            getCheckedKeys(),
+            ...this.$refs.treeRef.
+            getHalfCheckedKeys(),
+        ]
+        // console.log(keys)
+
+        const idStr = keys.join(',')
+        const {data:res} = await  this.$http.post(`roles/${this.roleId}/rights`,{rids:idStr})
+        // console.log(res)
+
+        if(res.meta.status !== 200) this.$message.error('分配权限失败！')
+        this.$message.success('分配权限成功！')
+        this.getRolesList()
+        this.setRightDialogVisible = false
     }
     }
 }
